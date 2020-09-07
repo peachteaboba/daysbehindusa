@@ -22,7 +22,7 @@ let weighted = false;
 (function init() {
     $(function () {
         // Fetch display params
-        https://i.imgur.com/EjrNMxL.png      displayList = [];
+        displayList = [];
         let displayParams = urlParams.get('display');
         if (displayParams) {
             displayParams = decodeURIComponent(displayParams);
