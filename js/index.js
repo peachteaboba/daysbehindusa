@@ -3,14 +3,18 @@ let dataset = {};
 let dataCount = [];
 let dataCountryCache = {};
 
-// let displayList = ['united_kingdom'];
 let displayList = [];
 const ignoreList = ['china', 'cruise_ship'];
 
-const minTotal = 100;
-const maxTotal = 30000;
-let startingCount = 6000;
-let startingWeighted = 20;
+const minTotal = 100000;
+const maxTotal = 4000000;
+const minTotalWeighted = 1000;
+const maxTotalWeighted = 18000;
+
+const startingCountStatic = 3000000;
+let startingCount = startingCountStatic;
+let startingWeighted = 10000;
+
 let limitMax = 15;
 let expand = false;
 let weighted = false;
@@ -50,7 +54,7 @@ function initControls() {
     if (urlStarting) {
         // Use url params
         if (weighted) {
-            if (urlStarting >= 1 && urlStarting <= 500) {
+            if (urlStarting >= minTotalWeighted && urlStarting <= maxTotalWeighted) {
                 startingCount = urlStarting;
             } else {
                 // Out of range
@@ -82,9 +86,9 @@ function initControls() {
 
     $('#weighted').on('change', function () {
         weighted = $(this).is(":checked");
-        startingCount = weighted ? startingWeighted : 4000;
+        startingCount = weighted ? startingWeighted : startingCountStatic;
         setWeighedSliders();
-        $('#starting-range-label').text(startingCount);
+        $('#starting-range-label').text(formatNumber(startingCount));
         $('#starting-range').val(startingCount);
         urlGenerator('weighted', weighted ? '1' : '0');
         initProcessData();
@@ -95,6 +99,11 @@ function initControls() {
     setWeighedSliders();
     setSliders();
     setToggle();
+}
+
+function formatNumber(num) {
+    if (typeof num !== "string") num = num.toString();
+    return num.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 }
 
 function initFilters() {
@@ -169,21 +178,21 @@ function setWeighedSliders() {
     const inputEl = $('#starting-range');
     if (weighted) {
         titleEl.text('Starting USA Case Number / 1M');
-        inputEl.attr('min', '1');
-        inputEl.attr('max', '50');
-        inputEl.attr('step', '1');
+        inputEl.attr('min', minTotalWeighted.toString());
+        inputEl.attr('max', maxTotalWeighted.toString());
+        inputEl.attr('step', '1000');
     } else {
         titleEl.text('Starting USA Case Number');
-        inputEl.attr('min', '100');
-        inputEl.attr('max', maxTotal);
-        inputEl.attr('step', '100');
+        inputEl.attr('min', minTotal.toString());
+        inputEl.attr('max', maxTotal.toString());
+        inputEl.attr('step', '100000');
     }
     inputEl.val(startingCount);
 }
 
 function setSliders() {
     // Starting
-    $('#starting-range-label').text(startingCount);
+    $('#starting-range-label').text(formatNumber(startingCount));
 }
 
 function setToggle() {
@@ -240,8 +249,8 @@ function processData(cb) {
     for (let prop in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, prop)) {
             const id = prop.replace(/\s+/g, '_').toLowerCase().replace(/[^\w\s]/gi, '');
-            if ((displayList.length > 0 && displayList.indexOf(id) === -1 && id !== 'italy') || !dataFixture.population[id]) {
-                // Skip this country
+            if ((displayList.length > 0 && displayList.indexOf(id) === -1 && id !== 'us') || !dataFixture.population[id]) {
+                // console.log('[ processData ] skipping this country:', id + (!dataFixture.population[id] ? ' (missing population data)' : ''));
             } else {
                 // Add to list
                 let arr = [];
@@ -272,7 +281,7 @@ function processData(cb) {
                     }
                 }
                 if (arr.length > 0 && latest >= minTotal) {
-                    if (displayList.length > 0 && displayList.indexOf(id) === -1 && id !== 'italy') {
+                    if (displayList.length > 0 && displayList.indexOf(id) === -1 && id !== 'us') {
                         // Skip this
                     } else if (ignoreList.indexOf(id) === -1) {
                         // Calculate weighted
@@ -306,14 +315,14 @@ function processData(cb) {
     dataCount = dataCount.slice(0, limitMax + 1);
 
     // -------------------------------------------------
-    // ------------ Shift To Match Italy ---------------
+    // ------------- Shift To Match USA ----------------
     // -------------------------------------------------
     let delta = {};
-    const italyData = processed['italy']['data'];
+    const usData = processed['us']['data'];
     for (let prop in processed) {
         if (Object.prototype.hasOwnProperty.call(processed, prop)) {
             let country = processed[prop];
-            if (country['name'] !== 'Italy') {
+            if (country['id'] !== 'us') {
                 let countryData = country['data'];
                 // Get max for country
                 const countryMax = weighted ? country['weighted'] : country['latest'];
@@ -321,9 +330,9 @@ function processData(cb) {
                 // Find index of lowest delta
                 delta = {};
                 let value;
-                for (let i = 0; i < italyData.length; i++) {
+                for (let i = 0; i < usData.length; i++) {
                     // Record lowest delta
-                    value = Math.abs(italyData[i][targetProp] - countryMax);
+                    value = Math.abs(usData[i][targetProp] - countryMax);
                     if (typeof delta.value === "undefined" || delta.value > value) {
                         delta.value = value;
                         delta.idx = i;
@@ -359,9 +368,9 @@ function processData(cb) {
                 // ------------ Populate Remaining Days ---------------
                 // ----------------------------------------------------
                 countryData = country['data'];
-                let daysForward = 1;
+                let daysForward = 0;
                 const latestDate = countryData[countryData.length - 1]['date'];
-                while (countryData.length !== italyData.length) {
+                while (countryData.length !== usData.length) {
                     let d = generateNewDate(latestDate);
                     d.setDate(d.getDate() + daysForward + 1);
                     countryData.push({
@@ -379,11 +388,11 @@ function processData(cb) {
     }
 
     // Fix Italy data bug
-    processed['italy']['data'].forEach(function (el) {
-        if (el['date'] === '2020-3-12') {
-            el['confirmed'] = 15113;
-        }
-    });
+    // processed['italy']['data'].forEach(function (el) {
+    //     if (el['date'] === '2020-3-12') {
+    //         el['confirmed'] = 15113;
+    //     }
+    // });
 
     // Add end buffer date to Italy
     // let lastItalyDate = generateNewDate(processed['italy']['data'][processed['italy']['data'].length - 1]['date']);
@@ -437,17 +446,17 @@ function renderList() {
 
     let html_arr = [];
     dataCount.forEach(function (el) {
-        if (el.id !== 'italy' && dataset[el.id] && dataset[el.id].data) {
+        if (el.id !== 'us' && dataset[el.id] && dataset[el.id].data) {
             // Create body wrapper div
             html_arr.push([
                 '<div class="body-wrapper" data-id="' + el.id + '">',
                 // Render day element
                 '<div class="day-wrapper">',
-                render.dayColumn(dataset['italy']),
+                render.dayColumn(dataset['us']),
                 '</div>',
-                // Render italy element
-                '<div class="italy-wrapper">',
-                render.countryColumn(dataset['italy'], dataset[el.id]['idx']),
+                // Render us element
+                '<div class="us-wrapper">',
+                render.countryColumn(dataset['us'], dataset[el.id]['idx']),
                 '</div>',
                 // Render country element
                 '<div class="country-wrapper">',
@@ -462,7 +471,6 @@ function renderList() {
         html_arr.join(''),
         '</div>'
     ].join(''));
-
 }
 
 function renderSummary() {
@@ -474,7 +482,7 @@ function renderSummary() {
 
     let html_arr = [];
     dataCount.forEach(function (el) {
-        if (el.id !== 'italy' && dataset[el.id] && dataset[el.id].data) {
+        if (el.id !== 'us' && dataset[el.id] && dataset[el.id].data) {
             // Create body wrapper div
             html_arr.push([
                 render.summaryRow(el, dataset[el.id], false)

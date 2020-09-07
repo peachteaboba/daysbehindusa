@@ -133,7 +133,7 @@ body {
     color: white;
 }
 
-.italy-wrapper {
+.us-wrapper {
     /*background: white;*/
     display: inline-block;
     vertical-align: top;
@@ -202,7 +202,7 @@ body {
     position: relative;
 }
 
-/*.italy-wrapper .country-title {*/
+/*.us-wrapper .country-title {*/
 /*    background: rgba(234, 76, 60, 0.15);*/
 /*}*/
 
@@ -219,7 +219,7 @@ body {
     /*margin-bottom: 8px;*/
 }
 
-.italy-wrapper .country-title-text-wrapper {
+.us-wrapper .country-title-text-wrapper {
     border-top-right-radius: unset;
     border-top-left-radius: 6px;
 }
@@ -309,7 +309,7 @@ body {
     /*border-bottom-left-radius: 6px;*/
 }
 
-.italy-wrapper .country-body {
+.us-wrapper .country-body {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 6px;
 }
@@ -371,7 +371,7 @@ body {
     padding: 0 23px 0 25px;
 }
 
-.country-date .cases.total.italy {
+.country-date .cases.total.us {
     /*text-align: right;*/
     padding: 0 25px 0 23px;
 }
@@ -443,7 +443,7 @@ body {
     font-size: 1em;
     height: 24px;
     line-height: 24px;
-    width: 50px;
+    width: 60px;
 }
 
 

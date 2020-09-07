@@ -50,7 +50,7 @@ render.countryColumn = function (data, idx, id) {
         // Add days forward if needed
         // --------------------------
         const days = data.data[i]['days'];
-        if (data['name'] !== 'Italy') {
+        if (data['name'] !== 'US') {
             if (typeof days !== "undefined" || isSameDay) {
                 if (isSameDayClass !== '') {
                     date_html.push('<div class="days-forward">Today</div>');
@@ -78,12 +78,12 @@ render.countryColumn = function (data, idx, id) {
         let arrow_html = '';
         if (idx && i === idx) {
             matchClass = ' match';
-            if (data['name'] !== 'Italy') {
+            if (data['name'] !== 'US') {
                 arrow_html = '<div class="arrow-left"></div>';
             }
         }
         let dynamicClass = i % 2 === 0 ? 'cases total even' + matchClass : 'cases total' + matchClass;
-        if (data['name'] === 'Italy') dynamicClass += ' italy';
+        if (data['name'] === 'US') dynamicClass += ' us';
 
         // ------------------
         // Build progress bar
@@ -164,7 +164,7 @@ render.countryColumn = function (data, idx, id) {
 
     // Combine components ::::::::::::::::::::
     // :::::::::::::::::::::::::::::::::::::::
-    if (data['name'] === 'Italy') {
+    if (data['name'] === 'US') {
         body.push(date_html.join(''));
         body.push(rec_html.join(''));
         body.push(deaths_html.join(''));
@@ -188,22 +188,21 @@ render.countryColumn = function (data, idx, id) {
 
     // Days title html
     let days_title_html = '';
-    if (data['name'] !== 'Italy') {
+    if (data['name'] !== 'US') {
         days_title_html = [
             '<div class="days-total-title" style="color: ' + getDaysColor(data['days']) + '">',
             data['days'],
-
             '</div>'
         ].join('');
     }
 
-    // Calculate how many times italy
+    // Calculate how many times us
     let multiples_html = '<span> - </span>';
-    const italyPop = dataFixture.population['italy'];
-    const numMultiples = (data.population / italyPop.full).toFixed(2);
+    const usPop = dataFixture.population['us'];
+    const numMultiples = (data.population / usPop.full).toFixed(2);
 
-    if (data['name'] !== 'Italy') {
-        multiples_html = numMultiples + '<span> times Italy</span>';
+    if (data['name'] !== 'US') {
+        multiples_html = numMultiples + '<span> times USA</span>';
     }
 
     let html = [
@@ -250,7 +249,7 @@ render.summaryRow = function (data, country, isFilter) {
     if (!isFilter) {
         days_html = [
             '<div class="days">',
-            '<p>Days Behind Italy</p>',
+            '<p>Days Behind USA</p>',
             '<h1 style="color: ' + getDaysColor(country['days']) + '">' + country['days'] + '</h1>',
             '</div>'
         ].join('');
@@ -271,7 +270,7 @@ render.summaryRow = function (data, country, isFilter) {
 render.filters = function () {
     let filter_elements_html = [];
     dataCount.forEach(function (el) {
-        if (el.id !== 'italy' && dataset[el.id] && dataset[el.id].data) {
+        if (el.id !== 'us' && dataset[el.id] && dataset[el.id].data) {
             // Create body wrapper div
             filter_elements_html.push(render.summaryRow(el, dataset[el.id], true));
         }
@@ -287,11 +286,11 @@ render.filters = function () {
 
 function getDaysColor(days) {
     let color = '#14C758';
-    if (days <= 7) {
+    if (days <= 40) {
         color = '#EB443F';
-    } else if (days <= 14) {
+    } else if (days <= 80) {
         color = '#FA8050';
-    } else if (days <= 21) {
+    } else if (days <= 120) {
         color = '#FBD661';
     }
     return color;
