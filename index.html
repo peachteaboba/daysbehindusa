@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Days Behind Italy · COVID-19</title>
+    <meta name="description"
+          content="Number of days various countries are behind Italy in total COVID-19 cases assuming similar case growth rate">
+
+    <!-- OG -->
+    <meta property="og:title" content="Days Behind Italy · COVID-19"/>
+    <meta property="og:site_name" content="#daysbehinditaly"/>
+    <meta property="og:type" content="data.visualize"/>
+    <meta property="og:url" content="https://daysbehinditaly.com"/>
+    <meta property="og:image" content="https://i.imgur.com/TewPHlI.png"/>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="fav/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="fav/favicon-16x16.png">
+    <link rel="manifest" href="fav/site.webmanifest">
+    <link rel="shortcut icon" href="fav/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="fav/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,900&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/mobile.css">
+
+    <!-- JS -->
+    <script type="text/javascript" src="js/packages/jquery.min.js"></script>
+    <script type="text/javascript" src="js/packages/moment.min.js"></script>
+    <script type="text/javascript" src="./js/data.js"></script>
+    <script type="text/javascript" src="./js/render.js"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
+
+</head>
+<body>
+
+<div class="center-wrapper">
+    <!---------------->
+    <!-- LEFT PANEL -->
+    <!---------------->
+    <div class="controls-wrapper">
+        <div class="header">
+            <h1>#daysbehinditaly</h1>
+            <a href="https://www.producthunt.com/posts/days-behind-italy-covid-19?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-days-behind-italy-covid-19" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=189202&theme=light" alt="Days Behind Italy: COVID-19 - Number of days behind Italy in total COVID-19 cases | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+            <p style="margin-top: 25px;">Number of days various countries are behind Italy in total COVID-19 cases assuming similar case growth
+                rate</p>
+            <p>Based on data from <a
+                    href="https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6"
+                    target="_blank">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins
+                CSSE</a></p>
+        </div>
+        <div class="slide-container">
+            <label for="starting-range" id="starting-range-title">Starting Italy Case Number</label>
+            <div id="amount_slider"></div>
+            <input type="range" min="100" max="30000" value="6000" class="slider" id="starting-range" name="starting" step="100">
+            <p id="starting-range-label">-</p>
+        </div>
+        <div class="toggle-wrapper">
+            <p>Display Deaths and Recoveries</p>
+            <label class="toggle">
+                <input type="checkbox" id="expand"/>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="toggle-wrapper">
+            <p>Population Weighted</p>
+            <label class="toggle">
+                <input type="checkbox" id="weighted"/>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div id="filter-btn">
+            <p>Filter</p>
+            <img src="./img/misc/filter.svg" alt="Filter Icon">
+        </div>
+        <div id="summary-wrapper"></div>
+    </div>
+    <!---------------->
+    <!-- BODY PANEL -->
+    <!---------------->
+    <div id="body"></div>
+    <!------------------>
+    <!-- FILTER PANEL -->
+    <!------------------>
+    <div id="filter-bg"></div>
+    <div id="filter"></div>
+    <!----------------->
+    <!-- RIGHT PANEL -->
+    <!----------------->
+    <div id="twitter-wrapper">
+        <div id="tweet-hashtag-wrapper">
+            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large"
+               data-text="Number of days various countries are behind Italy in total COVID-19 cases assuming similar case growth rate"
+               data-url="https://daysbehinditaly.com/" data-hashtags="daysbehinditaly" data-show-count="true">Share</a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+        <div class="footer">
+            <div class="info-wrapper">
+                <p>Created by <a href="https://twitter.com/ndyf" target="_blank">Andy Feng</a><br>Made with ♥ in Los
+                    Angeles, CA</p>
+                <p>⬩</p>
+                <p>Powered by data published by <a href="https://github.com/CSSEGISandData/COVID-19" target="_blank">Johns
+                    Hopkins University, CSSE</a></p>
+                <p>⬩</p>
+                <p>Using API endpoint by <a href="https://github.com/pomber/covid19"
+                                      target="_blank">github.com/pomber/covid19</a></p>
+                <p>⬩</p>
+                <p>Population data via <a href="https://www.worldometers.info/population/"
+                                      target="_blank">Worldometer</a></p>
+                <p>⬩</p>
+                <p>Inspired by the following posts:</p>
+            </div>
+        </div>
+        <div id="tweet-embeds">
+            <blockquote class="twitter-tweet" data-theme="dark"><p lang="en" dir="ltr">Some people asked me to post
+                upgraded versions of this graph as time goes on.<br>Looking at the number of confirmed cases Germany is
+                around 8 days behind Italy, the US are around 10 days behind Italy.<br>The curves are almost
+                identical.<a href="https://twitter.com/hashtag/COVID%E3%83%BC19?src=hash&amp;ref_src=twsrc%5Etfw">#COVIDー19</a>
+                <a href="https://twitter.com/hashtag/COVID19de?src=hash&amp;ref_src=twsrc%5Etfw">#COVID19de</a> <a
+                        href="https://twitter.com/hashtag/coronavirus?src=hash&amp;ref_src=twsrc%5Etfw">#coronavirus</a>
+                <a href="https://twitter.com/hashtag/COVID19US?src=hash&amp;ref_src=twsrc%5Etfw">#COVID19US</a> <a
+                        href="https://t.co/aPZMmhrKsS">pic.twitter.com/aPZMmhrKsS</a></p>&mdash; Constantin
+                (@c0n5tantin) <a href="https://twitter.com/c0n5tantin/status/1239530000132513794?ref_src=twsrc%5Etfw">March
+                    16, 2020</a></blockquote>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            <blockquote class="twitter-tweet" data-theme="dark"><p lang="en" dir="ltr">1/ <a
+                    href="https://twitter.com/hashtag/CoVID_19?src=hash&amp;ref_src=twsrc%5Etfw">#CoVID_19</a> Update
+                12th March. Confirmed cases in European countries still following 9-14 days behind Italy. Italy, France
+                and perhaps Germany have reduced their increase rate to ~22% per day. The rest are still on 30%+ <a
+                        href="https://t.co/nbGhNvanKK">pic.twitter.com/nbGhNvanKK</a></p>&mdash; Mark Handley
+                (@MarkJHandley) <a
+                        href="https://twitter.com/MarkJHandley/status/1238275488210173956?ref_src=twsrc%5Etfw">March 13,
+                    2020</a></blockquote>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            <blockquote class="twitter-tweet" data-theme="dark"><p lang="en" dir="ltr">As of today, the U.S. COVID-19
+                outbreak is 10 days behind Italy. Spain is 7 days behind, Germany is 8.<br><br>With the tool <a
+                        href="https://twitter.com/zachlatta?ref_src=twsrc%5Etfw">@zachlatta</a> &amp; I built this
+                weekend <a href="https://twitter.com/hackclub?ref_src=twsrc%5Etfw">@hackclub</a>, you can predict the
+                outbreak by country. Updated daily. 🦠<a href="https://t.co/9WvRT8R1UB">https://t.co/9WvRT8R1UB</a></p>&mdash;
+                Lachlan Campbell (@lachlanjc) <a
+                        href="https://twitter.com/lachlanjc/status/1240299654039904257?ref_src=twsrc%5Etfw">March 18,
+                    2020</a></blockquote>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

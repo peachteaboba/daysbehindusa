@@ -1,0 +1,11 @@
+@media screen and (max-width: 1000px) {
+    #body {
+        /*outline: 5px solid red;*/
+        /*margin-top: 100px;*/
+    }
+
+    #filter {
+        width: 90%;
+        left: 5%;
+    }
+}
