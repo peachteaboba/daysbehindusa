@@ -3,7 +3,7 @@ let dataset = {};
 let dataCount = [];
 let dataCountryCache = {};
 
-// const displayList = ['united_kingdom'];
+// let displayList = ['united_kingdom'];
 let displayList = [];
 const ignoreList = ['china', 'cruise_ship'];
 
@@ -16,7 +16,7 @@ let expand = false;
 let weighted = false;
 
 (function init() {
-    $(document).ready(function () {
+    $(function () {
         // Fetch display params
         displayList = [];
         let displayParams = urlParams.get('display');
@@ -43,7 +43,7 @@ function initControls() {
     if (urlParams.get('limit')) limitMax = parseInt(urlParams.get('limit'));
 
     // Set defaults
-    startingCount = weighted ? startingWeighted : 6000;
+    if (weighted) startingCount = startingWeighted;
 
     // Set initial starting range from url param
     const urlStarting = urlParams.get('starting') ? parseInt(urlParams.get('starting')) : 0;
@@ -64,7 +64,7 @@ function initControls() {
     }
 
     // Bind event handlers
-    $('#starting-range').mousemove(function () {
+    $('#starting-range').on('mousemove', function () {
         startingCount = $(this).val();
         setSliders();
     }).on('change', function () {
@@ -99,13 +99,13 @@ function initControls() {
 
 function initFilters() {
     const filterButtonEl = $('#filter-btn');
-    let filter_html = '';
+    let filter_html;
     if (displayList.length > 0) {
         const src = 'img/misc/filter-clear.svg';
-        filter_html = '<p>Clear Filter</p><img src="' + src + '" alt="Clear Filter Icon">';
+        filter_html = '<p>Clear Filters</p><img src="' + src + '" alt="Clear Filter Icon">';
     } else {
         const src = 'img/misc/filter.svg';
-        filter_html = '<p>Filter</p><img src="' + src + '" alt="Filter Icon">';
+        filter_html = '<p>Filter By Country</p><img src="' + src + '" alt="Filter Icon">';
     }
     filterButtonEl.html(filter_html);
     const filterEl = $('#filter');
@@ -124,7 +124,6 @@ function initFilters() {
 function toggleFilters() {
     const filterEl = $('#filter');
     const filterBgEl = $('#filter-bg');
-
     if (displayList.length > 0) {
         // Clear filters
         urlGenerator('display', '');
@@ -169,12 +168,12 @@ function setWeighedSliders() {
     const titleEl = $('#starting-range-title');
     const inputEl = $('#starting-range');
     if (weighted) {
-        titleEl.text('Starting Italy Case Number / 1M');
+        titleEl.text('Starting USA Case Number / 1M');
         inputEl.attr('min', '1');
         inputEl.attr('max', '50');
         inputEl.attr('step', '1');
     } else {
-        titleEl.text('Starting Italy Case Number');
+        titleEl.text('Starting USA Case Number');
         inputEl.attr('min', '100');
         inputEl.attr('max', maxTotal);
         inputEl.attr('step', '100');
@@ -190,7 +189,6 @@ function setSliders() {
 function setToggle() {
     // Expand
     $('#expand').prop('checked', expand);
-
     // Weighted
     $('#weighted').prop('checked', weighted);
 }
@@ -199,7 +197,7 @@ function urlGenerator(field, value) {
     let searchParams = new URLSearchParams(window.location.search);
     searchParams.set(field, value);
     const newParams = searchParams.toString();
-    history.pushState('', 'Days Behind Italy - COVID19', location.href.split('?')[0] += '?' + newParams);
+    history.pushState('', 'Days Behind USA - COVID19', location.href.split('?')[0] += '?' + newParams);
 }
 
 // ---------------------
