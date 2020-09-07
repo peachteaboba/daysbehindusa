@@ -4,7 +4,7 @@ let dataCount = [];
 let dataCountryCache = {};
 
 let displayList = [];
-const ignoreList = ['china', 'cruise_ship'];
+const ignoreList = ['cruise_ship'];
 
 const minTotal = 100000;
 const maxTotal = 4000000;
@@ -22,7 +22,7 @@ let weighted = false;
 (function init() {
     $(function () {
         // Fetch display params
-        displayList = [];
+        https://i.imgur.com/EjrNMxL.png      displayList = [];
         let displayParams = urlParams.get('display');
         if (displayParams) {
             displayParams = decodeURIComponent(displayParams);
