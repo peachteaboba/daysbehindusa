@@ -635,6 +635,7 @@ input:checked + .toggle-slider:before {
     border-radius: 6px;
     padding: 15px 15px 15px 15px;
     text-align: center;
+    position: relative;
 
     -moz-transition: background 0.15s, -moz-transform ease-in-out 0.5s;
     -webkit-transition: background 0.15s, -moz-transform ease-in-out 0.5s;
@@ -723,6 +724,32 @@ input:checked + .toggle-slider:before {
     font-size: 1.2em;
     margin-top: 10px;
     /*font-weight: 900;*/
+}
+
+/* RENDER DETAILS FLAG */
+/* RENDER DETAILS FLAG */
+/* RENDER DETAILS FLAG */
+/* RENDER DETAILS FLAG */
+/* RENDER DETAILS FLAG */
+/* RENDER DETAILS FLAG */
+.render-details-flag-wrapper {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: calc(50% - 10px);
+    right: -35px;
+    /*outline: 1px dotted red;*/
+
+
+}
+
+.render-details-flag-wrapper img {
+    height: 100%;
+    width: 100%;
+}
+
+.render-details-flag-wrapper.hide {
+    opacity: 0.2;
 }
 
 
@@ -980,3 +1007,5 @@ input:checked + .toggle-slider:before {
     -o-transition: background 0.15s, -moz-transform ease-in-out 0.5s;
     transition: background 0.15s, -moz-transform ease-in-out 0.5s;
 }
+
+

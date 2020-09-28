@@ -11,13 +11,15 @@ const maxTotal = 4000000;
 const minTotalWeighted = 1000;
 const maxTotalWeighted = 18000;
 
-const startingCountStatic = 3000000;
+const startingCountStatic = 500000;
 let startingCount = startingCountStatic;
 let startingWeighted = 10000;
 
 let limitMax = 15;
 let expand = false;
 let weighted = false;
+let isInit = true;
+let renderId = '';
 
 (function init() {
     $(function () {
@@ -229,15 +231,18 @@ function getData() {
     });
 }
 
-function initProcessData() {
+function initProcessData(reload) {
     // Display loading gif
     const bodyEl = $('#body');
     const img_src = 'img/gif/spinner-w.svg';
     bodyEl.html('<div class="loading-wrapper"><img src="' + img_src + '" alt="Loading"></div>');
-    processData(function () {
+    if (reload) {
         renderSummary();
-        renderList();
-    });
+    } else {
+        processData(function () {
+            renderSummary();
+        });
+    }
 }
 
 function processData(cb) {
@@ -435,44 +440,6 @@ function processData(cb) {
     cb();
 }
 
-function renderList() {
-
-    setTimeout(function () {
-        $('#body .loading-wrapper').html('');
-        $('#body-content-wrapper').removeClass('hide').addClass('show');
-    }, 500);
-
-    const bodyEl = $('#body');
-
-    let html_arr = [];
-    dataCount.forEach(function (el) {
-        if (el.id !== 'us' && dataset[el.id] && dataset[el.id].data) {
-            // Create body wrapper div
-            html_arr.push([
-                '<div class="body-wrapper" data-id="' + el.id + '">',
-                // Render day element
-                '<div class="day-wrapper">',
-                render.dayColumn(dataset['us']),
-                '</div>',
-                // Render us element
-                '<div class="us-wrapper">',
-                render.countryColumn(dataset['us'], dataset[el.id]['idx']),
-                '</div>',
-                // Render country element
-                '<div class="country-wrapper">',
-                render.countryColumn(dataset[el.id], dataset[el.id]['idx'], el.id),
-                '</div>',
-                '</div>'
-            ].join(''));
-        }
-    });
-    bodyEl.append([
-        '<div id="body-content-wrapper" class="hide">',
-        html_arr.join(''),
-        '</div>'
-    ].join(''));
-}
-
 function renderSummary() {
     // console.log(dataCount);
 
@@ -483,6 +450,11 @@ function renderSummary() {
     let html_arr = [];
     dataCount.forEach(function (el) {
         if (el.id !== 'us' && dataset[el.id] && dataset[el.id].data) {
+            // Set initial renderId
+            if (isInit) {
+                isInit = false;
+                renderId = el.id;
+            }
             // Create body wrapper div
             html_arr.push([
                 render.summaryRow(el, dataset[el.id], false)
@@ -491,16 +463,58 @@ function renderSummary() {
     });
     summaryEl.html(html_arr.join(''));
 
-    // Assign event handlers
+    // Assign event handlers on first invocation
     $('.summary-el').on('click', function () {
         const id = $(this).attr('data-id');
         const targetEl = $('.body-wrapper[data-id="' + id + '"]');
         if (id && targetEl) {
+            renderId = id;
+            initProcessData(true);
             $([document.documentElement, document.body]).animate({
-                scrollTop: targetEl.offset().top - 40
-            }, 1000);
+                scrollTop: 0
+            }, 500);
         }
     });
+
+    renderDetails();
+}
+
+function renderDetails() {
+    if (renderId) {
+        const bodyEl = $('#body');
+        let html_arr = [];
+        dataCount.forEach(function (el) {
+            if (el.id === renderId && el.id !== 'us' && dataset[el.id] && dataset[el.id].data) {
+                // Create body wrapper div
+                html_arr.push([
+                    '<div class="body-wrapper" data-id="' + el.id + '">',
+                    // Render day element
+                    '<div class="day-wrapper">',
+                    render.dayColumn(dataset['us']),
+                    '</div>',
+                    // Render us element
+                    '<div class="us-wrapper">',
+                    render.countryColumn(dataset['us'], dataset[el.id]['idx']),
+                    '</div>',
+                    // Render country element
+                    '<div class="country-wrapper">',
+                    render.countryColumn(dataset[el.id], dataset[el.id]['idx'], el.id),
+                    '</div>',
+                    '</div>'
+                ].join(''));
+            }
+        });
+        bodyEl.append([
+            '<div id="body-content-wrapper" class="hide">',
+            html_arr.join(''),
+            '</div>'
+        ].join(''));
+
+        setTimeout(function () {
+            $('#body .loading-wrapper').html('');
+            $('#body-content-wrapper').removeClass('hide').addClass('show');
+        }, 500);
+    }
 }
 
 function generateNewDate(dateStr) {

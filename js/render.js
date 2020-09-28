@@ -255,9 +255,17 @@ render.summaryRow = function (data, country, isFilter) {
         ].join('');
     }
 
+    const render_img_src = data.id === renderId ? 'img/icons/show.svg' : 'img/icons/hide.svg';
+    const render_img_class = data.id === renderId ? 'render-details-flag-wrapper' : 'render-details-flag-wrapper hide';
+    const render_html = [
+        '<div class="' + render_img_class + '">',
+        '<img src="' + render_img_src + '" alt="show/hide">',
+        '</div>'].join('');
+
     let dynamicClass = isFilter ? 'filter-el noselect' : 'summary-el noselect';
     let html = [
         '<div class="' + dynamicClass + '" data-id="' + data['id'] + '">',
+        render_html,
         title_html,
         cases_html,
         days_html,
